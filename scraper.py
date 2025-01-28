@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from datetime import datetime  # Pour gérer l'horodatage
+from datetime import datetime
+import os  # Pour gérer les dossiers et chemins
 
 # Fonction pour envoyer une requête HTTP et récupérer le contenu
 def get_page_content(url):
@@ -36,14 +37,22 @@ def extract_product_info(url):
         return product_info
     return None
 
-def save_to_csv(product_info, filename_base="product_data"):
+def save_to_csv(product_info, folder="collected_data", filename_base="product_data"):
+    # Créer le dossier s'il n'existe pas
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+        print(f"Dossier '{folder}' créé.")
+
     # Ajouter un horodatage au nom du fichier
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # Format : 20250128_143015
     filename = f"{filename_base}_{timestamp}.csv"
 
+    # Chemin complet du fichier (dans le dossier collected_data)
+    file_path = os.path.join(folder, filename)
+
     # Vérifier si le fichier CSV existe déjà
     try:
-        df = pd.read_csv(filename)
+        df = pd.read_csv(file_path)
         # Vérifier si l'URL du produit existe déjà dans le CSV
         if product_info['product_page_url'] in df['product_page_url'].values:
             print("Produit déjà enregistré.")
@@ -55,9 +64,9 @@ def save_to_csv(product_info, filename_base="product_data"):
     new_row = pd.DataFrame([product_info])
     df = pd.concat([df, new_row], ignore_index=True)
 
-    # Sauvegarder dans le CSV
-    df.to_csv(filename, index=False)
-    print(f"Fichier sauvegardé sous le nom : {filename}")
+    # Sauvegarder dans le fichier CSV
+    df.to_csv(file_path, index=False)
+    print(f"Fichier sauvegardé sous le nom : {file_path}")
 
 
 # Fonction principale pour récupérer et enregistrer les données
