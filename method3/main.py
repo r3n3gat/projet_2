@@ -1,51 +1,57 @@
-# method3/main.py
-from method3.scraper import get_category_links, get_books_links
-from method3.exctractor import get_product_info
-from method3.saver import create_output_directory, save_to_csv
+# Importation des fonctions depuis les modules locaux
+from scraper import get_category_links, get_books_links  # Fonctions pour récupérer les liens des catégories et des livres
+from exctractor import extract_book_data  # Fonction pour extraire les informations d'un livre
+from saver import create_output_directory, save_to_csv  # Fonctions pour créer un dossier de sortie et sauvegarder les données
+import time  # Importation de time pour mesurer le temps d'exécution du script
 
+# Définition de l'URL de base du site à scraper
+BASE_URL = 'https://books.toscrape.com/index.html'
 
 def main():
-    base_url = 'https://books.toscrape.com/'
-    categories = get_category_links(base_url)
+    """
+    Fonction principale qui coordonne l'ensemble du processus de scraping :
+    1. Récupère les catégories de livres.
+    2. Scrape les informations de chaque livre dans chaque catégorie.
+    3. Sauvegarde les données extraites dans des fichiers CSV distincts.
+    """
+    start_time = time.time()  # Enregistrement de l'heure de début pour mesurer la durée totale de l'exécution
+    total_books_scraped = 0  # Initialisation du compteur de livres extraits
+    errors_encountered = 0  # Initialisation du compteur d'erreurs rencontrées
 
-    folder_path = create_output_directory()
+    # Création du dossier de sortie pour stocker les résultats
+    output_folder = create_output_directory()
 
-    total_categories = 0
-    total_books = 0
-    errors = []
+    # Récupération des liens des catégories à partir de l'URL de base
+    category_links = get_category_links(BASE_URL)
 
-    for category_name, category_url in categories.items():
+    print(f"[INFO] {len(category_links)} catégories trouvées.")  # Affichage du nombre de catégories trouvées
+
+    # Parcours de chaque catégorie pour scraper les livres
+    for category_name, category_url in category_links.items():
         print(f"[INFO] Scraping de la catégorie : {category_name}")
-        total_categories += 1
 
+        # Récupération des liens de tous les livres dans la catégorie
         book_links = get_books_links(category_url)
         print(f"[INFO] {len(book_links)} livres trouvés dans la catégorie '{category_name}'.")
 
-        products_data = []
-        for link in book_links:
-            product_info = get_product_info(link)
-            if product_info:
-                products_data.append(product_info)
-                total_books += 1
+        # Extraction des données pour chaque livre
+        category_data = []
+        for book_url in book_links:
+            book_data = extract_book_data(book_url)
+            if book_data:  # Si les données sont extraites avec succès
+                category_data.append(book_data)
+                total_books_scraped += 1  # Incrémentation du compteur de livres extraits
             else:
-                errors.append(link)
+                errors_encountered += 1  # Incrémentation du compteur d'erreurs en cas d'échec d'extraction
 
-        if products_data:
-            save_to_csv(products_data, category_name, folder_path)
-        else:
-            print(f"[ATTENTION] Aucune donnée sauvegardée pour la catégorie '{category_name}'.")
+        # Sauvegarde des données de la catégorie dans un fichier CSV
+        save_to_csv(category_data, category_name, output_folder)
 
-    # Résumé des résultats
-    print("\n--- RÉCAPITULATIF DU SCRAPING ---")
-    print(f"Nombre total de catégories scannées : {total_categories}")
-    print(f"Nombre total de livres scannés : {total_books}")
-    if errors:
-        print(f"[ERREURS] {len(errors)} erreurs rencontrées.")
-        for error in errors:
-            print(f"  - Échec pour : {error}")
-    else:
-        print("[SUCCÈS] Aucun problème rencontré.")
-
+    # Calcul de la durée totale de l'exécution
+    total_time = time.time() - start_time
+    print(f"\n[INFO] Scraping terminé en {total_time:.2f} secondes.")
+    print(f"[INFO] Total des livres extraits : {total_books_scraped}")
+    print(f"[INFO] Total des erreurs rencontrées : {errors_encountered}")
 
 if __name__ == "__main__":
-    main()
+    main()  # Exécution de la fonction principale lorsque le script est lancé directement
