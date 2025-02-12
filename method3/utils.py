@@ -1,13 +1,33 @@
-# method3/utils.py
+import requests
+from requests.exceptions import HTTPError
+from bs4 import BeautifulSoup
+import os
+import pandas as pd
 
-def clean_price(price_str):
-    """Convertit une chaîne de prix en float (ex: '£51.77' -> 51.77)."""
-    return float(price_str.lstrip('£'))
+def make_absolute_url(relative_url, base_url='https://books.toscrape.com/'):
+    return base_url + relative_url if not relative_url.startswith('http') else relative_url
 
-def clean_stock(stock_str):
-    """Extrait le nombre de livres disponibles d'une chaîne (ex: 'In stock (22 available)' -> 22)."""
-    return int(''.join(filter(str.isdigit, stock_str)))
+def get_page_content(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.text
+    except HTTPError as http_err:
+        print(f"[ERREUR] Erreur HTTP : {http_err} pour l'URL {url}")
+    except Exception as err:
+        print(f"[ERREUR] Erreur : {err} pour l'URL {url}")
+    return None
 
-def make_absolute_url(relative_url):
-    """Transforme une URL relative en URL absolue."""
-    return 'https://books.toscrape.com/' + relative_url.replace('../', '')
+def save_data(data, filepath):
+    df = pd.DataFrame(data)
+    df.to_csv(filepath, index=False, encoding='utf-8')
+
+def create_directory(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Répertoire {directory} créé.")
+
+def parse_category_page(page_content):
+    soup = BeautifulSoup(page_content, 'html.parser')
+    book_links = [article.find('h3').find('a')['href'] for article in soup.find_all('article', class_='product_pod')]
+    return book_links

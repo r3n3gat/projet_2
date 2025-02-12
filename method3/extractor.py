@@ -1,11 +1,7 @@
-# method2/extractor.py
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from method3.utils import clean_price, clean_stock, make_absolute_url
 
-#Ce module est responsable de l'extraction des données spécifiques de chaque page produit de livre.
-#Il extrait les informations nécessaires et les prépare pour être transformées ou sauvegardées.
 
 
 # Fonction pour extraire les informations d'un livre à partir de sa page produit
