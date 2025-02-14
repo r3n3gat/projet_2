@@ -1,5 +1,3 @@
-from dbm import error
-
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -62,6 +60,7 @@ def get_books_links(category_url):
 
     # Initialiser une liste vide pour stocker les liens des livres.
     book_links = []
+
 
     # Boucle pour parcourir toutes les pages de la catégorie (pagination).
     while category_url:
