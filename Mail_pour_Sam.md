@@ -25,11 +25,13 @@ pour une future présentation :
    - Récupération automatique des catégories et des liens de chaque livre.  
    - Extraction des données : titre, prix, stock, description, notation, etc.  
    - Téléchargement des images associées.
+   - 
 
 2. **TRANSFORM** :  
    - Nettoyage et structuration des noms de fichiers. 
    - trnasformation des URL.
-   - Classement des livres et images par catégorie.  
+   - Classement des livres et images par catégorie.
+   - 
 
 3. **LOAD** :  
    - Stockage dans un dossier global `collected_data/` qui, à chaque run, créera un dossier 
