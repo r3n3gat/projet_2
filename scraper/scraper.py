@@ -105,7 +105,7 @@ def get_books_links(category_url):
             break
 
     # Retourner la liste des liens de livres.
-    return book_links
+    return book_links, []
 
 
 def main():
