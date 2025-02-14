@@ -10,6 +10,7 @@ configuré sur votre machine.
 1. Clonez le repository si ce n'est pas déjà fait :
    
    git clone https://github.com/r3n3gat/projet-2.git
+
    
 2. Utiliser le fichier `requirements.txt`
 
@@ -19,7 +20,9 @@ configuré sur votre machine.
 3. Créer un environnement virtuel :
 
    python -m venv env 
+
    env\Scripts\activate ( sur windows )
+
    env\Scripts\activate  ( dur Mac ou Linux )
 
 
@@ -33,6 +36,7 @@ configuré sur votre machine.
    Les fichiers sont générés dans collected_data/ avec un dossier horodaté contenant :
 
 book_data/ → CSV des livres par catégorie
+
 book_image/ → Images des livres classées par catégorie
 
 _______________________________________________________________________ 
@@ -43,14 +47,20 @@ Ce projet suit un pipeline ETL (Extract, Transform, Load) :
 Extract  :
 
 Récupération des catégories et des liens des livres (scraper.py).
+
 Extraction des données (extractor.py).
+
 Récupération des images (image_download.py).
+
 
 Transform  :
 
 Nettoyage des données.
+
 Formatage des noms de fichiers.
+
 Organisation des fichiers et images.
+
 
 Load  :
 
