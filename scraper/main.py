@@ -33,7 +33,7 @@ def main():
         print(f"[INFO] Scraping de la catégorie : {category_name}")
 
         # Récupération des liens de tous les livres dans la catégorie
-        book_links = get_books_links(category_url)
+        book_links, errors = get_books_links(category_url)
         print(f"[INFO] {len(book_links)} livres trouvés dans la catégorie '{category_name}'.")
 
         # Extraction des données et téléchargement des images pour chaque livre

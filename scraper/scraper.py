@@ -60,7 +60,7 @@ def get_books_links(category_url):
 
     # Initialiser une liste vide pour stocker les liens des livres.
     book_links = []
-
+    errors = []
 
     # Boucle pour parcourir toutes les pages de la catégorie (pagination).
     while category_url:
@@ -106,7 +106,7 @@ def get_books_links(category_url):
             break
 
     # Retourner la liste des liens de livres.
-    return book_links
+    return book_links, errors
 
 
 def main():

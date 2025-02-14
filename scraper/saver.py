@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import requests
-
+from datetime import datetime
 
 def create_output_directory(base_folder='collected_data'):
     """
@@ -13,7 +13,7 @@ def create_output_directory(base_folder='collected_data'):
     Returns:
         dict: Dictionnaire contenant les chemins des sous-dossiers.
     """
-    from datetime import datetime
+
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     base_path = os.path.join(base_folder, timestamp)
 
